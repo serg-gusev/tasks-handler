@@ -4,17 +4,24 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       += core gui widgets
 
 TARGET = tasks-handler
 TEMPLATE = app
-
+CONFIG += c++11
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    node.cpp \
+    edge.cpp \
+    scene.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    node.h \
+    edge.h \
+    scene.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    res.qrc
