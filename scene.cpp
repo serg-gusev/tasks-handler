@@ -4,10 +4,16 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
 
-Scene::Scene(QObject *parent) :
-    QGraphicsScene(parent)
+Scene::Scene(MainWindow *parent) :
+    QGraphicsScene(parent),
+    _mainWindow(parent)
 {
     setSceneRect(0, 0, 800, 600);
+}
+
+void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
+{
+    QGraphicsScene::mousePressEvent(e);
 }
 
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
