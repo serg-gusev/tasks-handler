@@ -7,19 +7,14 @@
 Scene::Scene(QObject *parent) :
     QGraphicsScene(parent)
 {
-    //setSceneRect(0, 0, 800, 600);
-}
-
-void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
-{
-
+    setSceneRect(0, 0, 800, 600);
 }
 
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
-    qDebug() << "mouse release" << e->pos();
     auto node = new Node;
-    node->setPos(e->pos());
+    auto nodeRect = node->boundingRect();
+    node->setPos(e->scenePos() - QPointF(nodeRect.width() / 2, nodeRect.height() / 2));
     addItem(node);
 
     QGraphicsScene::mouseReleaseEvent(e);

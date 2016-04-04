@@ -9,7 +9,6 @@ public:
     Scene(QObject *parent = nullptr);
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *e) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e) override;
 };
 
