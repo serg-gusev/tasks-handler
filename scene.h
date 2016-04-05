@@ -16,6 +16,7 @@ protected:
 
 private:
     MainWindow *_mainWindow = nullptr;
+    bool _pressed = false;
 };
 
 #endif // SCENE_H

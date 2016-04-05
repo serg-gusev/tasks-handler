@@ -14,14 +14,19 @@ Scene::Scene(MainWindow *parent) :
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     QGraphicsScene::mousePressEvent(e);
+    _pressed = true;
 }
 
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
-    auto node = new Node;
-    auto nodeRect = node->boundingRect();
-    node->setPos(e->scenePos() - QPointF(nodeRect.width() / 2, nodeRect.height() / 2));
-    addItem(node);
+    if (_pressed) {
+        auto node = new Node;
+        auto nodeRect = node->boundingRect();
+        node->setPos(e->scenePos() - QPointF(nodeRect.width() / 2, nodeRect.height() / 2));
+        addItem(node);
+    }
+
+    _pressed = false;
 
     QGraphicsScene::mouseReleaseEvent(e);
 }
