@@ -3,15 +3,14 @@
 #include <QPen>
 #include <QPainter>
 #include <QFont>
-#include <QCursor>
-#include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
 
 Node::Node() :
     QGraphicsEllipseItem(0, 0, 30, 30)
 {
     setPen(QPen(Qt::red, 3));
-    setFlag(ItemIsMovable);
+    setFlags(ItemIsMovable | ItemIsFocusable | ItemIsSelectable);
+    setSelected(true);
 
     _inputTimer.setInterval(1500);
     _inputTimer.setSingleShot(true);
@@ -27,38 +26,6 @@ void Node::paint(QPainter *p, const QStyleOptionGraphicsItem *o, QWidget *w)
     p->setPen(Qt::black);
     p->drawText(boundingRect(), Qt::AlignCenter, QString::number(_number));
 }
-
-//void Node::mousePressEvent(QGraphicsSceneMouseEvent *e)
-//{
-//    QGraphicsEllipseItem::mousePressEvent(e);
-
-//    setCursor(Qt::ClosedHandCursor);
-
-//    _dragged = true;
-//    _dragPoint = e->pos();
-
-//    e->accept();
-//}
-
-//void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
-//{
-//    QGraphicsEllipseItem::mouseMoveEvent(e);
-
-//    if (_dragged) {
-//        setPos(e->scenePos() - _dragPoint);
-//    }
-
-//    e->accept();
-//}
-
-//void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
-//{
-//    QGraphicsEllipseItem::mouseReleaseEvent(e);
-
-//    setCursor(Qt::OpenHandCursor);
-//    _dragged = false;
-//    e->accept();
-//}
 
 void Node::keyPressEvent(QKeyEvent *e)
 {

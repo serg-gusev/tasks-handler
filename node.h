@@ -12,9 +12,6 @@ public:
     void paint(QPainter *p, const QStyleOptionGraphicsItem *o, QWidget *w = nullptr) override;
 
 protected:
-//    void mousePressEvent(QGraphicsSceneMouseEvent *e) override;
-//    void mouseMoveEvent(QGraphicsSceneMouseEvent *e) override;
-//    void mouseReleaseEvent(QGraphicsSceneMouseEvent *e) override;
     void keyPressEvent(QKeyEvent *e) override;
 
 private:
