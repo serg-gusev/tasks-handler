@@ -3,19 +3,18 @@
 
 #include <QGraphicsScene>
 
-#include "mainwindow.h"
-
 class Scene : public QGraphicsScene
 {
 public:
-    Scene(MainWindow *parent = nullptr);
+    Scene(QObject *parent = nullptr);
+
+    void setNodesInteractable(bool interactable);
 
 protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e) override;
 
 private:
-    MainWindow *_mainWindow = nullptr;
-    bool _pressed = false;
+    bool _nodesInteractable = true;
 };
 
 #endif // SCENE_H

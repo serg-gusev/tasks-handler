@@ -9,8 +9,7 @@ Node::Node() :
     QGraphicsEllipseItem(0, 0, 30, 30)
 {
     setPen(QPen(Qt::red, 3));
-    setFlags(ItemIsMovable | ItemIsFocusable | ItemIsSelectable);
-    setSelected(true);
+    setInteractable(true);
 
     _inputTimer.setInterval(1500);
     _inputTimer.setSingleShot(true);
@@ -25,6 +24,12 @@ void Node::paint(QPainter *p, const QStyleOptionGraphicsItem *o, QWidget *w)
     p->setFont(f);
     p->setPen(Qt::black);
     p->drawText(boundingRect(), Qt::AlignCenter, QString::number(_number));
+}
+
+void Node::setInteractable(bool interactable)
+{
+    auto flgs = ItemIsMovable | ItemIsFocusable | ItemIsSelectable;
+    setFlags(interactable ? (flags() | flgs) : (flags() & (~flgs)));
 }
 
 void Node::keyPressEvent(QKeyEvent *e)
@@ -59,4 +64,3 @@ void Node::keyPressEvent(QKeyEvent *e)
 
     update();
 }
-

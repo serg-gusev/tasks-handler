@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "scene.h"
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -14,11 +12,27 @@ MainWindow::MainWindow(QWidget *parent) :
     actionsGroup->addAction(ui->actionNode);
     actionsGroup->addAction(ui->actionEdge);
 
-    auto scene = new Scene(this);
+    scene = new Scene(this);
+    scene->setNodesInteractable(ui->actionNode->isChecked());
     ui->graphEditor->setScene(scene);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_actionNode_triggered()
+{
+    scene->setNodesInteractable(true);
+}
+
+void MainWindow::on_actionEdge_triggered()
+{
+    scene->setNodesInteractable(false);
+}
+
+void MainWindow::on_actionStart_triggered()
+{
+
 }
