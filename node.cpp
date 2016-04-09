@@ -1,14 +1,17 @@
 #include "node.h"
+#include "edge.h"
 
 #include <QPen>
 #include <QPainter>
 #include <QFont>
 #include <QKeyEvent>
+#include <QDebug>
 
 Node::Node() :
-    QGraphicsEllipseItem(0, 0, 30, 30)
+    QGraphicsEllipseItem(-15, -15, 30, 30)
 {
     setPen(QPen(Qt::red, 3));
+    setFlags(flags() | ItemSendsGeometryChanges);
     setInteractable(true);
 
     _inputTimer.setInterval(1500);
@@ -30,6 +33,50 @@ void Node::setInteractable(bool interactable)
 {
     auto flgs = ItemIsMovable | ItemIsFocusable | ItemIsSelectable;
     setFlags(interactable ? (flags() | flgs) : (flags() & (~flgs)));
+}
+
+void Node::addInEdge(Edge *edge)
+{
+    if (!_inEdges.contains(edge)) {
+        _inEdges << edge;
+    }
+}
+
+void Node::addOutEdge(Edge *edge)
+{
+    if (!_outEdges.contains(edge)) {
+        _outEdges << edge;
+    }
+}
+
+void Node::removeInEdge(Edge *edge)
+{
+    _inEdges.removeAll(edge);
+}
+
+void Node::removeOutEdge(Edge *edge)
+{
+    _outEdges.removeAll(edge);
+}
+
+void Node::adjustEdges()
+{
+    for (auto edge : _inEdges) {
+        edge->adjust();
+    }
+
+    for (auto edge : _outEdges) {
+        edge->adjust();
+    }
+}
+
+QVariant Node::itemChange(QGraphicsItem::GraphicsItemChange c, const QVariant &v)
+{
+    if (c == ItemPositionChange) {
+        adjustEdges();
+    }
+
+    return QGraphicsEllipseItem::itemChange(c, v);
 }
 
 void Node::keyPressEvent(QKeyEvent *e)
