@@ -7,6 +7,8 @@
 #include <QKeyEvent>
 #include <QDebug>
 
+int Node::globalNodeIndex = 1;
+
 Node::Node() :
     QGraphicsEllipseItem(-15, -15, 30, 30)
 {
@@ -16,6 +18,9 @@ Node::Node() :
 
     _inputTimer.setInterval(1500);
     _inputTimer.setSingleShot(true);
+
+    _index = globalNodeIndex;
+    globalNodeIndex++;
 }
 
 void Node::paint(QPainter *p, const QStyleOptionGraphicsItem *o, QWidget *w)
@@ -23,10 +28,16 @@ void Node::paint(QPainter *p, const QStyleOptionGraphicsItem *o, QWidget *w)
     QGraphicsEllipseItem::paint(p, o, w);
 
     auto f = p->font();
+
     f.setPixelSize(16);
     p->setFont(f);
     p->setPen(Qt::black);
     p->drawText(boundingRect(), Qt::AlignCenter, QString::number(_number));
+
+    f.setPixelSize(8);
+    p->setFont(f);
+    p->setPen(Qt::blue);
+    p->drawText(boundingRect().translated(3, -3), Qt::AlignRight | Qt::AlignTop, QString::number(_index));
 }
 
 void Node::setInteractable(bool interactable)

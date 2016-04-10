@@ -32,6 +32,9 @@ private:
 
     QList<Edge *> _inEdges;
     QList<Edge *> _outEdges;
+
+    static int globalNodeIndex;
+    int _index;
 };
 
 #endif // NODE_H

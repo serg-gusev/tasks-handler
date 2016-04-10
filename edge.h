@@ -23,7 +23,7 @@ private:
 
     QPointF _endPoint;
 
-    const int _arrowSize = 10;
+    static const int _arrowSize = 10;
 };
 
 #endif // EDGE_H
