@@ -14,12 +14,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     node.cpp \
     edge.cpp \
-    scene.cpp
+    scene.cpp \
+    graph.cpp
 
 HEADERS  += mainwindow.h \
     node.h \
     edge.h \
-    scene.h
+    scene.h \
+    graph.h
 
 FORMS    += mainwindow.ui
 

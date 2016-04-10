@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include "edge.h"
+#include "graph.h"
 
 class Scene : public QGraphicsScene
 {
@@ -11,12 +12,16 @@ public:
 
     void setNodesInteractable(bool interactable);
 
+    Graph buildGraph() const;
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e) override;
 
 private:
+    GraphNode *buildGraphNode(Node *node) const;
+
     bool _nodesInteractable = true;
     Edge *_currentEdge = nullptr;
 };

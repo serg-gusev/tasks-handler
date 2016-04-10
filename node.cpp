@@ -81,6 +81,26 @@ void Node::adjustEdges()
     }
 }
 
+QList<Edge *> Node::inEdges() const
+{
+    return _inEdges;
+}
+
+QList<Edge *> Node::outEdges() const
+{
+    return _outEdges;
+}
+
+int Node::index() const
+{
+    return _index;
+}
+
+int Node::number() const
+{
+    return _number;
+}
+
 QVariant Node::itemChange(QGraphicsItem::GraphicsItemChange c, const QVariant &v)
 {
     if (c == ItemPositionChange) {

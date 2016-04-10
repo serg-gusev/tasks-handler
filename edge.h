@@ -17,6 +17,9 @@ public:
     void setEndPoint(const QPointF &point);
     void setEndNode(Node *endNode);
 
+    Node *startNode() const;
+    Node *endNode() const;
+
 private:
     Node *_startNode = nullptr;
     Node *_endNode = nullptr;

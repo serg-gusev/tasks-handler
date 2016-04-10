@@ -22,6 +22,12 @@ public:
 
     void adjustEdges();
 
+    QList<Edge *> inEdges() const;
+    QList<Edge *> outEdges() const;
+
+    int index() const;
+    int number() const;
+
 protected:
     QVariant itemChange(GraphicsItemChange c, const QVariant &v) override;
     void keyPressEvent(QKeyEvent *e) override;

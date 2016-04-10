@@ -101,3 +101,13 @@ void Edge::setEndNode(Node *endNode)
     adjust();
 }
 
+Node *Edge::startNode() const
+{
+    return _startNode;
+}
+
+Node *Edge::endNode() const
+{
+    return _endNode;
+}
+

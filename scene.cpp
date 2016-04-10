@@ -20,6 +20,34 @@ void Scene::setNodesInteractable(bool interactable)
     }
 }
 
+Graph Scene::buildGraph() const
+{
+    Node *rootNode = nullptr;
+    for (auto item : items()) {
+        rootNode = dynamic_cast<Node *>(item);
+        if (rootNode && rootNode->outEdges().count() == 0)
+            break;
+    }
+
+    if (!rootNode)
+        return Graph();
+
+    return Graph(buildGraphNode(rootNode));
+}
+
+GraphNode *Scene::buildGraphNode(Node *node) const
+{
+    auto *graphNode = new GraphNode;
+    graphNode->index = node->index();
+    graphNode->weight = node->number();
+
+    for (auto edge : node->outEdges()) {
+        graphNode->childs << buildGraphNode(edge->endNode());
+    }
+
+    return graphNode;
+}
+
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     if (!_nodesInteractable) {
