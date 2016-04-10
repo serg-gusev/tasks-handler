@@ -22,30 +22,32 @@ void Scene::setNodesInteractable(bool interactable)
 
 Graph Scene::buildGraph() const
 {
-    Node *rootNode = nullptr;
+    Graph g;
+
     for (auto item : items()) {
-        rootNode = dynamic_cast<Node *>(item);
-        if (rootNode && rootNode->outEdges().count() == 0)
-            break;
+        auto node = dynamic_cast<Node *>(item);
+        if (node) {
+            auto graphNode = new GraphNode;
+            graphNode->index = node->index();
+            graphNode->weight = node->number();
+            g.addNode(graphNode);
+        }
     }
 
-    if (!rootNode)
-        return Graph();
+    for (auto item : items()) {
+        auto edge = dynamic_cast<Edge *>(item);
+        if (edge) {
+            auto startGraphNode = g.find(edge->startNode()->index());
+            auto endGraphNode = g.find(edge->endNode()->index());
 
-    return Graph(buildGraphNode(rootNode));
-}
-
-GraphNode *Scene::buildGraphNode(Node *node) const
-{
-    auto *graphNode = new GraphNode;
-    graphNode->index = node->index();
-    graphNode->weight = node->number();
-
-    for (auto edge : node->outEdges()) {
-        graphNode->childs << buildGraphNode(edge->endNode());
+            if (startGraphNode && endGraphNode) {
+                startGraphNode->addChild(endGraphNode);
+                endGraphNode->addParent(startGraphNode);
+            }
+        }
     }
 
-    return graphNode;
+    return g;
 }
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)

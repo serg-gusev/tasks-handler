@@ -34,5 +34,12 @@ void MainWindow::on_actionEdge_triggered()
 
 void MainWindow::on_actionStart_triggered()
 {
+    auto graph = scene->buildGraph();
+    if (graph.isEmpty()) {
+        ui->statusBar->showMessage(tr("Error!"));
+        return;
+    }
 
+    timeline = new Timeline(&graph);
+    timeline->show();
 }

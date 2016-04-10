@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "scene.h"
+#include "timeline.h"
 
 namespace Ui {
 class MainWindow;
@@ -25,6 +26,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Scene *scene = nullptr;
+    Timeline *timeline = nullptr;
 };
 
 #endif // MAINWINDOW_H

@@ -20,8 +20,6 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e) override;
 
 private:
-    GraphNode *buildGraphNode(Node *node) const;
-
     bool _nodesInteractable = true;
     Edge *_currentEdge = nullptr;
 };

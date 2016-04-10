@@ -15,13 +15,15 @@ SOURCES += main.cpp\
     node.cpp \
     edge.cpp \
     scene.cpp \
-    graph.cpp
+    graph.cpp \
+    timeline.cpp
 
 HEADERS  += mainwindow.h \
     node.h \
     edge.h \
     scene.h \
-    graph.h
+    graph.h \
+    timeline.h
 
 FORMS    += mainwindow.ui
 
