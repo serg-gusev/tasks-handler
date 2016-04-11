@@ -27,9 +27,9 @@ Graph Scene::buildGraph() const
     for (auto item : items()) {
         auto node = dynamic_cast<Node *>(item);
         if (node) {
-            auto graphNode = new GraphNode;
-            graphNode->index = node->index();
-            graphNode->weight = node->number();
+            GraphNode graphNode;
+            graphNode.index = node->index();
+            graphNode.weight = node->number();
             g.addNode(graphNode);
         }
     }
@@ -40,9 +40,9 @@ Graph Scene::buildGraph() const
             auto startGraphNode = g.find(edge->startNode()->index());
             auto endGraphNode = g.find(edge->endNode()->index());
 
-            if (startGraphNode && endGraphNode) {
-                startGraphNode->addChild(endGraphNode);
-                endGraphNode->addParent(startGraphNode);
+            if (startGraphNode.index != 0 && endGraphNode.index != 0) {
+                startGraphNode.addChild(endGraphNode.index);
+                endGraphNode.addParent(startGraphNode.index);
             }
         }
     }

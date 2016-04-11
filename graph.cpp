@@ -1,18 +1,18 @@
 #include "graph.h"
 
-//void GraphNode::addChild(GraphNode *child)
-//{
-//    if (!childs.contains(child)) {
-//        childs.append(child);
-//    }
-//}
+void GraphNode::addChild(int childIndex)
+{
+    if (!childsIndexes.contains(childIndex)) {
+        childsIndexes.append(childIndex);
+    }
+}
 
-//void GraphNode::removeChild(GraphNode *child)
-//{
-//    if (childs.contains(child)) {
-//        childs.removeAll(child);
-//    }
-//}
+void GraphNode::removeChild(int childIndex)
+{
+    if (childsIndexes.contains(childIndex)) {
+        childsIndexes.removeAll(childIndex);
+    }
+}
 
 void GraphNode::addParent(int parentIndex)
 {
@@ -28,23 +28,6 @@ void GraphNode::removeParent(int parentIndex)
     }
 }
 
-int GraphNode::startTime() const
-{
-    return startTime(this) - weight;
-}
-
-int GraphNode::startTime(const GraphNode *node) const
-{
-    int result = node->weight;
-    for (auto parent : node->parents) {
-        int parentsLongestWay = startTime(parent);
-        if (node->weight + parentsLongestWay > result) {
-            result = node->weight + parentsLongestWay;
-        }
-    }
-    return result;
-}
-
 Graph::Graph()
 {
 
@@ -55,59 +38,60 @@ bool Graph::isEmpty() const
     return _nodes.isEmpty();
 }
 
-void Graph::addNode(GraphNode *node)
+void Graph::addNode(const GraphNode &node)
 {
     if (!contains(node)) {
         _nodes.append(node);
     }
 }
 
-void Graph::removeNode(GraphNode *node)
+void Graph::removeNode(const GraphNode &node)
 {
     if (contains(node)) {
         _nodes.removeAll(node);
     }
 }
 
-bool Graph::contains(GraphNode *node) const
+bool Graph::contains(const GraphNode &node) const
 {
-    return find(node->index);
+    return find(node.index).index != 0;
 }
 
-GraphNode *Graph::find(int index) const
+GraphNode Graph::find(int index) const
 {
     for (auto graphNode : _nodes) {
-        if (graphNode && graphNode->index == index)
+        if (graphNode.index == index)
             return graphNode;
     }
 
-    return nullptr;
+    return GraphNode();
 }
 
-QList<GraphNode *> Graph::nodes() const
+QList<GraphNode> Graph::nodes() const
 {
     return _nodes;
 }
 
-int Graph::taskStartTime(const GraphNode &node)
+int Graph::taskStartTime(const GraphNode &node) const
 {
-    int result = node.weight;
-    for (auto parent : node.parentIndexes) {
-        int parentsLongestWay = startTime(parent);
-        if (node->weight + parentsLongestWay > result) {
-            result = node->weight + parentsLongestWay;
+    int result = 0;
+    for (auto parentIndex : node.parentIndexes) {
+        auto parentNode = _nodes[parentIndex];
+        int parentsLongestWay = taskStartTime(parentNode);
+        if (node.weight + parentsLongestWay > result) {
+            result = node.weight + parentsLongestWay;
         }
     }
     return result;
 }
 
-QList<GraphNode *> Graph::tasksForTime(int time) const
+QList<GraphNode> Graph::tasksForTime(int time) const
 {
-    QList<GraphNode *> res;
+    QList<GraphNode> res;
 
     for (auto graphNode : _nodes) {
-        auto nodeStartTime = graphNode->startTime();
-        if (nodeStartTime <= time && time < nodeStartTime + graphNode->weight) {
+        auto nodeStartTime = taskStartTime(graphNode);
+        if (nodeStartTime <= time && time < nodeStartTime + graphNode.weight) {
             res << graphNode;
         }
     }
@@ -122,27 +106,4 @@ int Graph::tasksTime() const
         i++;
     }
     return i;
-}
-
-Graph Graph::optimalGraph(Graph *startGraph)
-{
-    static Graph optGraph;
-
-    for (int i = 0; i < startGraph->nodes().count(); i++) {
-        auto tasks = startGraph->tasksForTime(i);
-        if (tasks.count() > 2) {
-            for (auto node1 : tasks) {
-                for (auto node2 : tasks) {
-                    if (node1 != node2) {
-                        node1->addChild(node2);
-                        node2->addParent(node1);
-
-
-                    }
-                }
-            }
-        }
-    }
-
-    return optGraph;
 }

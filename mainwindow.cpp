@@ -42,10 +42,6 @@ void MainWindow::on_actionStart_triggered()
         return;
     }
 
-    for (int i = 0; i < 6; i++) {
-        qDebug() << graph.tasksForTime(i);
-    }
-
     timeline = new Timeline(&graph);
     timeline->show();
 }

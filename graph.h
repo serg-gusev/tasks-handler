@@ -5,16 +5,18 @@
 
 struct GraphNode
 {
-//    void addChild(GraphNode *child);
-//    void removeChild(GraphNode *child);
-//    QList<GraphNode *> childs;
+    void addChild(int childIndex);
+    void removeChild(int childIndex);
+    QList<int> childsIndexes;
 
     void addParent(int parentIndex);
     void removeParent(int parentIndex);
-    QList<GraphNode *> parentIndexes;
+    QList<int> parentIndexes;
 
-    int startTime() const;
-    int startTime(const GraphNode *node) const;
+    bool operator ==(const GraphNode &other)
+    {
+        return index == other.index;
+    }
 
     int index = 0;
     int weight = 0;
@@ -26,23 +28,20 @@ public:
     Graph();
     bool isEmpty() const;
 
-    void addNode(GraphNode *node);
-    void removeNode(GraphNode *node);
-    bool contains(GraphNode *node) const;
+    void addNode(const GraphNode &node);
+    void removeNode(const GraphNode &node);
+    bool contains(const GraphNode &node) const;
     bool contains(int index) const;
-    GraphNode *find(int index) const;
-    QList<GraphNode *> nodes() const;
+    GraphNode find(int index) const;
+    QList<GraphNode> nodes() const;
 
-    int taskStartTime(const GraphNode &node);
+    int taskStartTime(const GraphNode &node) const;
 
-    QList<GraphNode *> tasksForTime(int time) const;
+    QList<GraphNode> tasksForTime(int time) const;
     int tasksTime() const;
 
-    static Graph optimalGraph(Graph *startGraph);
-
 private:
-    GraphNode *_root;
-    QList<GraphNode *> _nodes;
+    QList<GraphNode> _nodes;
 };
 
 #endif // GRAPH_H

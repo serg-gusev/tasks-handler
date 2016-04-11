@@ -4,8 +4,8 @@
 #include <QPainter>
 #include <QDebug>
 
-TimelineTask::TimelineTask(GraphNode *graphNode) :
-    QGraphicsRectItem(0, 0, graphNode->weight * taskSingleWidth, taskHeight),
+TimelineTask::TimelineTask(const GraphNode &graphNode) :
+    QGraphicsRectItem(0, 0, graphNode.weight * taskSingleWidth, taskHeight),
     _node(graphNode)
 {
     _color = Qt::black;
@@ -16,7 +16,7 @@ void TimelineTask::paint(QPainter *p, const QStyleOptionGraphicsItem *o, QWidget
 {
     QGraphicsRectItem::paint(p, o, w);
 
-    p->drawText(boundingRect(), Qt::AlignCenter, QString::number(_node->index));
+    p->drawText(boundingRect(), Qt::AlignCenter, QString::number(_node.index));
 }
 
 Timeline::Timeline(Graph *graph, QWidget *parent) :
@@ -28,13 +28,13 @@ Timeline::Timeline(Graph *graph, QWidget *parent) :
     drawGraph(graph);
 }
 
-void Timeline::drawTask(GraphNode *graphNode)
+void Timeline::drawTask(const GraphNode &graphNode, Graph *graph)
 {
     auto task = new TimelineTask(graphNode);
 
     int parentsCount = 0;
-    int longestWay = findLongestWay(graphNode, parentsCount) - graphNode->weight;
-    int xOffset = longestWay * TimelineTask::taskSingleWidth + 100 + parentsCount * 2;
+    int taskStartTime = graph->taskStartTime(graphNode);
+    int xOffset = taskStartTime * TimelineTask::taskSingleWidth + 100 + parentsCount * 2;
     int yOffset = 500 - TimelineTask::taskHeight - 2;
 
     for (int i = 0; i < _scene->items().count(); i++) {
@@ -64,20 +64,6 @@ void Timeline::drawGraph(Graph *graph)
     _scene->addLine(100, 500, 700, 500);
 
     for (auto node : graph->nodes()) {
-        drawTask(node);
+        drawTask(node, graph);
     }
-}
-
-int Timeline::findLongestWay(GraphNode *node, int &parentsCount)
-{
-    int result = node->weight;
-    for (auto parent : node->parents) {
-        int parentsCountTemp = 0;
-        int parentsLongestWay = findLongestWay(parent, parentsCountTemp);
-        if (node->weight + parentsLongestWay > result) {
-            result = node->weight + parentsLongestWay;
-            parentsCount = parentsCountTemp + 1;
-        }
-    }
-    return result;
 }
