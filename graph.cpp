@@ -1,35 +1,51 @@
 #include "graph.h"
 
-void GraphNode::addChild(GraphNode *child)
+//void GraphNode::addChild(GraphNode *child)
+//{
+//    if (!childs.contains(child)) {
+//        childs.append(child);
+//    }
+//}
+
+//void GraphNode::removeChild(GraphNode *child)
+//{
+//    if (childs.contains(child)) {
+//        childs.removeAll(child);
+//    }
+//}
+
+void GraphNode::addParent(int parentIndex)
 {
-    if (!childs.contains(child)) {
-        childs.append(child);
+    if (!parentIndexes.contains(parentIndex)) {
+        parentIndexes.append(parentIndex);
     }
 }
 
-void GraphNode::removeChild(GraphNode *child)
+void GraphNode::removeParent(int parentIndex)
 {
-    if (childs.contains(child)) {
-        childs.removeAll(child);
+    if (parentIndexes.contains(parentIndex)) {
+        parentIndexes.removeAll(parentIndex);
     }
 }
 
-void GraphNode::addParent(GraphNode *parent)
+int GraphNode::startTime() const
 {
-    if (!parents.contains(parent)) {
-        parents.append(parent);
-    }
+    return startTime(this) - weight;
 }
 
-void GraphNode::removeParent(GraphNode *parent)
+int GraphNode::startTime(const GraphNode *node) const
 {
-    if (parents.contains(parent)) {
-        parents.removeAll(parent);
+    int result = node->weight;
+    for (auto parent : node->parents) {
+        int parentsLongestWay = startTime(parent);
+        if (node->weight + parentsLongestWay > result) {
+            result = node->weight + parentsLongestWay;
+        }
     }
+    return result;
 }
 
-Graph::Graph(GraphNode *rootNode) :
-    _root(rootNode)
+Graph::Graph()
 {
 
 }
@@ -71,4 +87,62 @@ GraphNode *Graph::find(int index) const
 QList<GraphNode *> Graph::nodes() const
 {
     return _nodes;
+}
+
+int Graph::taskStartTime(const GraphNode &node)
+{
+    int result = node.weight;
+    for (auto parent : node.parentIndexes) {
+        int parentsLongestWay = startTime(parent);
+        if (node->weight + parentsLongestWay > result) {
+            result = node->weight + parentsLongestWay;
+        }
+    }
+    return result;
+}
+
+QList<GraphNode *> Graph::tasksForTime(int time) const
+{
+    QList<GraphNode *> res;
+
+    for (auto graphNode : _nodes) {
+        auto nodeStartTime = graphNode->startTime();
+        if (nodeStartTime <= time && time < nodeStartTime + graphNode->weight) {
+            res << graphNode;
+        }
+    }
+
+    return res;
+}
+
+int Graph::tasksTime() const
+{
+    int i = 0;
+    while (tasksForTime(i).count() > 0) {
+        i++;
+    }
+    return i;
+}
+
+Graph Graph::optimalGraph(Graph *startGraph)
+{
+    static Graph optGraph;
+
+    for (int i = 0; i < startGraph->nodes().count(); i++) {
+        auto tasks = startGraph->tasksForTime(i);
+        if (tasks.count() > 2) {
+            for (auto node1 : tasks) {
+                for (auto node2 : tasks) {
+                    if (node1 != node2) {
+                        node1->addChild(node2);
+                        node2->addParent(node1);
+
+
+                    }
+                }
+            }
+        }
+    }
+
+    return optGraph;
 }

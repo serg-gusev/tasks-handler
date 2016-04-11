@@ -44,7 +44,6 @@ void Timeline::drawTask(GraphNode *graphNode)
             auto itemTask = dynamic_cast<TimelineTask *>(item);
             if (itemTask) {
                 auto itemRect = QRectF(itemTask->pos(), itemTask->boundingRect().size());
-                qDebug() << "place task" << taskRect << task->index() << "but meet" << itemRect << itemTask->index();
                 if (itemRect.intersects(taskRect)) {
                     yOffset -= TimelineTask::taskHeight + 2;
                     break;

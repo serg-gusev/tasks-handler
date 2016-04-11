@@ -5,13 +5,16 @@
 
 struct GraphNode
 {
-    void addChild(GraphNode *child);
-    void removeChild(GraphNode *child);
-    QList<GraphNode *> childs;
+//    void addChild(GraphNode *child);
+//    void removeChild(GraphNode *child);
+//    QList<GraphNode *> childs;
 
-    void addParent(GraphNode *parent);
-    void removeParent(GraphNode *parent);
-    QList<GraphNode *> parents;
+    void addParent(int parentIndex);
+    void removeParent(int parentIndex);
+    QList<GraphNode *> parentIndexes;
+
+    int startTime() const;
+    int startTime(const GraphNode *node) const;
 
     int index = 0;
     int weight = 0;
@@ -20,7 +23,7 @@ struct GraphNode
 class Graph
 {
 public:
-    Graph(GraphNode *rootNode = nullptr);
+    Graph();
     bool isEmpty() const;
 
     void addNode(GraphNode *node);
@@ -29,6 +32,13 @@ public:
     bool contains(int index) const;
     GraphNode *find(int index) const;
     QList<GraphNode *> nodes() const;
+
+    int taskStartTime(const GraphNode &node);
+
+    QList<GraphNode *> tasksForTime(int time) const;
+    int tasksTime() const;
+
+    static Graph optimalGraph(Graph *startGraph);
 
 private:
     GraphNode *_root;

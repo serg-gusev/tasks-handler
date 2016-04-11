@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QDebug>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -38,6 +40,10 @@ void MainWindow::on_actionStart_triggered()
     if (graph.isEmpty()) {
         ui->statusBar->showMessage(tr("Error!"));
         return;
+    }
+
+    for (int i = 0; i < 6; i++) {
+        qDebug() << graph.tasksForTime(i);
     }
 
     timeline = new Timeline(&graph);
