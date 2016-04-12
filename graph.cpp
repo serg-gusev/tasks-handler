@@ -78,9 +78,9 @@ int Graph::taskStartTime(const GraphNode &node, int &parentsCount) const
     for (auto parentIndex : node.parentIndexes) {
         auto parentNode = find(parentIndex);
         int tempParentsCount = 0;
-        int parentsLongestWay = taskStartTime(parentNode, tempParentsCount);
-        if (parentNode.weight + parentsLongestWay > result) {
-            result = parentNode.weight + parentsLongestWay;
+        int parentStartTime = taskStartTime(parentNode, tempParentsCount);
+        if (parentNode.weight + parentStartTime > result) {
+            result = parentNode.weight + parentStartTime;
             parentsCount = tempParentsCount + 1;
         }
     }

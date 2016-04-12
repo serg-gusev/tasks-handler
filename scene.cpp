@@ -2,6 +2,7 @@
 #include "node.h"
 
 #include <QGraphicsSceneMouseEvent>
+#include <QDebug>
 
 Scene::Scene(QObject *parent) :
     QGraphicsScene(parent)
@@ -37,8 +38,8 @@ Graph Scene::buildGraph() const
     for (auto item : items()) {
         auto edge = dynamic_cast<Edge *>(item);
         if (edge) {
-            auto startGraphNode = g.find(edge->startNode()->index());
-            auto endGraphNode = g.find(edge->endNode()->index());
+            auto &startGraphNode = g[edge->startNode()->index()];
+            auto &endGraphNode = g[edge->endNode()->index()];
 
             if (startGraphNode.index != 0 && endGraphNode.index != 0) {
                 startGraphNode.addChild(endGraphNode.index);
