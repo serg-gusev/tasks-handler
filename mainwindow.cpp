@@ -42,6 +42,6 @@ void MainWindow::on_actionStart_triggered()
         return;
     }
 
-    timeline = new Timeline(&graph);
+    timeline = new Timeline(graph);
     timeline->show();
 }

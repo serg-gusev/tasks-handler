@@ -1,4 +1,5 @@
 #include "timeline.h"
+#include "ui_timeline.h"
 
 #include <QPen>
 #include <QPainter>
@@ -19,21 +20,33 @@ void TimelineTask::paint(QPainter *p, const QStyleOptionGraphicsItem *o, QWidget
     p->drawText(boundingRect(), Qt::AlignCenter, QString::number(_node.index));
 }
 
-Timeline::Timeline(Graph *graph, QWidget *parent) :
-    QGraphicsView(parent)
+Timeline::Timeline(const Graph &graph, QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::Timeline)
 {
-    _scene = new QGraphicsScene(0, 0, 800, 600, this);
-    setScene(_scene);
+    ui->setupUi(this);
 
-    drawGraph(graph);
+    _scene = new QGraphicsScene(0, 0, 800, 600, this);
+    ui->timelineView->setScene(_scene);
+
+    _graphs << graph;
+    auto g = graph;
+    handleGraph(g);
+
+    drawGraph(0);
 }
 
-void Timeline::drawTask(const GraphNode &graphNode, Graph *graph)
+Timeline::~Timeline()
+{
+    delete ui;
+}
+
+void Timeline::drawTask(const GraphNode &graphNode, const Graph &graph)
 {
     auto task = new TimelineTask(graphNode);
 
     int parentsCount = 0;
-    int taskStartTime = graph->taskStartTime(graphNode);
+    int taskStartTime = graph.taskStartTime(graphNode, parentsCount);
     int xOffset = taskStartTime * TimelineTask::taskSingleWidth + 100 + parentsCount * 2;
     int yOffset = 500 - TimelineTask::taskHeight - 2;
 
@@ -56,14 +69,61 @@ void Timeline::drawTask(const GraphNode &graphNode, Graph *graph)
     _scene->addItem(task);
 }
 
-void Timeline::drawGraph(Graph *graph)
+void Timeline::drawGraph(int graphIndex)
 {
+    if (graphIndex == _currentGraphIndex)
+        return;
+
+    _currentGraphIndex = graphIndex;
+    ui->previousButton->setEnabled(graphIndex > 0);
+    ui->nextButton->setEnabled(graphIndex < _graphs.count() - 1);
+
     _scene->clear();
 
     _scene->addLine(100, 100, 100, 500);
     _scene->addLine(100, 500, 700, 500);
 
-    for (auto node : graph->nodes()) {
+    auto graph = _graphs[graphIndex];
+    for (auto node : graph.nodes()) {
         drawTask(node, graph);
     }
+}
+
+void Timeline::handleGraph(Graph &graph)
+{
+    for (int i = 0; graph.tasksForTime(i).count() > 0; i++) {
+        auto tasks = graph.tasksForTime(i);
+        if (tasks.count() > 2) {
+            for (auto task1 : tasks) {
+                for (auto task2 : tasks) {
+                    if (task1 == task2)
+                        continue;
+
+                    graph[task1.index].addChild(task2.index);
+                    graph[task2.index].addParent(task1.index);
+
+                    _graphs << graph;
+                    handleGraph(graph);
+
+                    graph[task1.index].removeChild(task2.index);
+                    graph[task2.index].removeParent(task1.index);
+                }
+            }
+        }
+    }
+}
+
+void Timeline::on_previousButton_clicked()
+{
+    drawGraph(_currentGraphIndex - 1);
+}
+
+void Timeline::on_nextButton_clicked()
+{
+    drawGraph(_currentGraphIndex + 1);
+}
+
+void Timeline::on_optimalButton_clicked()
+{
+
 }

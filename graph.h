@@ -35,10 +35,12 @@ public:
     GraphNode find(int index) const;
     QList<GraphNode> nodes() const;
 
-    int taskStartTime(const GraphNode &node) const;
+    int taskStartTime(const GraphNode &node, int &parentsCount) const;
 
     QList<GraphNode> tasksForTime(int time) const;
     int tasksTime() const;
+
+    GraphNode &operator [](int nodeIndex);
 
 private:
     QList<GraphNode> _nodes;

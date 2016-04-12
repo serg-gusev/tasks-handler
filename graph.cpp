@@ -72,14 +72,16 @@ QList<GraphNode> Graph::nodes() const
     return _nodes;
 }
 
-int Graph::taskStartTime(const GraphNode &node) const
+int Graph::taskStartTime(const GraphNode &node, int &parentsCount) const
 {
     int result = 0;
     for (auto parentIndex : node.parentIndexes) {
-        auto parentNode = _nodes[parentIndex];
-        int parentsLongestWay = taskStartTime(parentNode);
-        if (node.weight + parentsLongestWay > result) {
-            result = node.weight + parentsLongestWay;
+        auto parentNode = find(parentIndex);
+        int tempParentsCount = 0;
+        int parentsLongestWay = taskStartTime(parentNode, tempParentsCount);
+        if (parentNode.weight + parentsLongestWay > result) {
+            result = parentNode.weight + parentsLongestWay;
+            parentsCount = tempParentsCount + 1;
         }
     }
     return result;
@@ -89,8 +91,9 @@ QList<GraphNode> Graph::tasksForTime(int time) const
 {
     QList<GraphNode> res;
 
+    int tmp;
     for (auto graphNode : _nodes) {
-        auto nodeStartTime = taskStartTime(graphNode);
+        auto nodeStartTime = taskStartTime(graphNode, tmp);
         if (nodeStartTime <= time && time < nodeStartTime + graphNode.weight) {
             res << graphNode;
         }
@@ -106,4 +109,14 @@ int Graph::tasksTime() const
         i++;
     }
     return i;
+}
+
+GraphNode &Graph::operator [](int nodeIndex)
+{
+    for (int i = 0; i < _nodes.count(); i++) {
+        if (_nodes[i].index == nodeIndex)
+            return _nodes[i];
+    }
+
+    return _nodes[0];
 }

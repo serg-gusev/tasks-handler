@@ -25,7 +25,8 @@ HEADERS  += mainwindow.h \
     graph.h \
     timeline.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    timeline.ui
 
 RESOURCES += \
     res.qrc
