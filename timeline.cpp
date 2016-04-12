@@ -99,13 +99,11 @@ void Timeline::handleGraph(Graph &graph)
                     if (task1 == task2)
                         continue;
 
-                    graph[task1.index].addChild(task2.index);
                     graph[task2.index].addParent(task1.index);
 
                     _graphs << graph;
                     handleGraph(graph);
 
-                    graph[task1.index].removeChild(task2.index);
                     graph[task2.index].removeParent(task1.index);
                 }
             }
@@ -125,5 +123,23 @@ void Timeline::on_nextButton_clicked()
 
 void Timeline::on_optimalButton_clicked()
 {
+    int minTime = INT_MAX, minTimeIndex = 0;
+    for (int i = 0; i < _graphs.count(); i++) {
+        auto graph = _graphs[i];
+        int time = 0, tasksCount;
+        do {
+            tasksCount = graph.tasksForTime(time).count();
+            time++;
+        } while (0 < tasksCount && tasksCount <= 2);
 
+        if (graph.tasksForTime(time - 1).count() > 0)
+            continue;
+
+        if (time < minTime) {
+            minTime = time;
+            minTimeIndex = i;
+        }
+    }
+
+    drawGraph(minTimeIndex);
 }
