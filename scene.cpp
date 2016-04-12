@@ -42,7 +42,6 @@ Graph Scene::buildGraph() const
             auto &endGraphNode = g[edge->endNode()->index()];
 
             if (startGraphNode.index != 0 && endGraphNode.index != 0) {
-                startGraphNode.addChild(endGraphNode.index);
                 endGraphNode.addParent(startGraphNode.index);
             }
         }

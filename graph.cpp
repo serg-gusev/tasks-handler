@@ -1,19 +1,5 @@
 #include "graph.h"
 
-void GraphNode::addChild(int childIndex)
-{
-    if (!childsIndexes.contains(childIndex)) {
-        childsIndexes.append(childIndex);
-    }
-}
-
-void GraphNode::removeChild(int childIndex)
-{
-    if (childsIndexes.contains(childIndex)) {
-        childsIndexes.removeAll(childIndex);
-    }
-}
-
 void GraphNode::addParent(int parentIndex)
 {
     if (!parentIndexes.contains(parentIndex)) {
@@ -40,21 +26,16 @@ bool Graph::isEmpty() const
 
 void Graph::addNode(const GraphNode &node)
 {
-    if (!contains(node)) {
+    if (!_nodes.contains(node)) {
         _nodes.append(node);
     }
 }
 
 void Graph::removeNode(const GraphNode &node)
 {
-    if (contains(node)) {
+    if (_nodes.contains(node)) {
         _nodes.removeAll(node);
     }
-}
-
-bool Graph::contains(const GraphNode &node) const
-{
-    return find(node.index).index != 0;
 }
 
 GraphNode Graph::find(int index) const
@@ -100,15 +81,6 @@ QList<GraphNode> Graph::tasksForTime(int time) const
     }
 
     return res;
-}
-
-int Graph::tasksTime() const
-{
-    int i = 0;
-    while (tasksForTime(i).count() > 0) {
-        i++;
-    }
-    return i;
 }
 
 GraphNode &Graph::operator [](int nodeIndex)

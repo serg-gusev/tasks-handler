@@ -5,10 +5,6 @@
 
 struct GraphNode
 {
-    void addChild(int childIndex);
-    void removeChild(int childIndex);
-    QList<int> childsIndexes;
-
     void addParent(int parentIndex);
     void removeParent(int parentIndex);
     QList<int> parentIndexes;
@@ -30,15 +26,13 @@ public:
 
     void addNode(const GraphNode &node);
     void removeNode(const GraphNode &node);
-    bool contains(const GraphNode &node) const;
-    bool contains(int index) const;
+
     GraphNode find(int index) const;
     QList<GraphNode> nodes() const;
 
     int taskStartTime(const GraphNode &node, int &parentsCount) const;
 
     QList<GraphNode> tasksForTime(int time) const;
-    int tasksTime() const;
 
     GraphNode &operator [](int nodeIndex);
 
