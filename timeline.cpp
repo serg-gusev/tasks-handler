@@ -47,18 +47,21 @@ void Timeline::drawTask(const GraphNode &graphNode, const Graph &graph)
 
     int parentsCount = 0;
     int taskStartTime = graph.taskStartTime(graphNode, parentsCount);
-    int xOffset = taskStartTime * TimelineTask::taskSingleWidth + 100 + parentsCount * 2;
-    int yOffset = 500 - TimelineTask::taskHeight - 2;
+    int xOffset = taskStartTime * TimelineTask::taskSingleWidth + 100;
+    int yOffset = 500 - TimelineTask::taskHeight;
 
     for (int i = 0; i < _scene->items().count(); i++) {
         for (auto item : _scene->items()) {
-            auto taskRect = QRectF(QPointF(xOffset, yOffset), task->boundingRect().size());
+            auto taskBoundingRect = task->boundingRect();
+            auto taskRect = QRectF(xOffset + 2, yOffset + 2, taskBoundingRect.width() - 2, taskBoundingRect.height() - 2);
 
             auto itemTask = dynamic_cast<TimelineTask *>(item);
             if (itemTask) {
-                auto itemRect = QRectF(itemTask->pos(), itemTask->boundingRect().size());
+                auto itemBoundingRect = itemTask->boundingRect();
+                auto itemRect = QRectF(itemTask->x() + 2, itemTask->y() + 2, itemBoundingRect.width() - 2, itemBoundingRect.height() - 2);
+
                 if (itemRect.intersects(taskRect)) {
-                    yOffset -= TimelineTask::taskHeight + 2;
+                    yOffset -= TimelineTask::taskHeight;
                     break;
                 }
             }
